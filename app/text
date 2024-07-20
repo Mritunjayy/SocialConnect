@@ -1,0 +1,115 @@
+<!-- I have to solve the issue of update post, it is showing error of ResponseValidationError -->
+
+<!-- {'type': 'missing', 'loc': ('response', 'id'), 'msg': 'Field required', 'input': {'data': <app.models.Post object at 0x000002511D92A710>}}
+{'type': 'missing', 'loc': ('response', 'title'), 'msg': 'Field required', 'input': {'data': <app.models.Post object at 0x000002511D92A710>}}
+{'type': 'missing', 'loc': ('response', 'content'), 'msg': 'Field required', 'input': {'data': <app.models.Post object at 0x000002511D92A710>}}
+{'type': 'missing', 'loc': ('response', 'published'), 'msg': 'Field required', 'input': {'data': <app.models.Post object at 0x000002511D92A710>}}
+{'type': 'missing', 'loc': ('response', 'created_at'), 'msg': 'Field required', 'input': {'data': <app.models.Post object at 0x000002511D92A710>}}
+{'type': 'missing', 'loc': ('response', 'owner_id'), 'msg': 'Field required', 'input': {'data': <app.models.Post object at 0x000002511D92A710>}} -->
+
+<!-----------------------------------------
+now here we have we are retreiving the requested post but with their owner_id and not any name or username or email, so the other person would not know who created the post , he have to then find out using owner_id, so with sqlalchemy , we can set it up so it automatically does it for us.
+  
+<!--------------------------------- -->
+<!-- query parameters----1. setting limit for retrieving posts  
+2.allowing users to skip the results    (skip=0)
+3. search functionality..(based on title)  (search=lets)
+4. using spaces in the search functionality..(posts?skip=0&search=lets%20explore)-->
+
+<!-- --------------------------------- -->
+<!-- now we want our sensitive informations like SECRET_KEY, SQLALCHEMY_DATABSE_URL ,, so for this we basically use environment variables , which basically lets us create these at other places..(but its a slow process in overall , so we consider creating environment file..)-->
+
+<!-- we have created the environment file as .env file ,, after which we have to import it into our config.py wherein we have made a class with all the env variables and done class config: env_file = ".env to get connected to the .env file ,, afetr which we change the all imp variables like secret key, access token time, algorithm and much more to a hidden thing.. -->
+
+<!-- now  voting/likes system requirements..
+1. user should be able to like post
+2. should only be able to like a post once
+3. retrieving posts should also fetch the total number of likes..-->
+
+<!-- vote model.....
+. column refrencing post_id
+. column refrencing id of user who liked the post
+. a user should only be able to like a post once so this means we need to ensure post_id/voter_id is a unique combination.
+
+i.e we need another table to store the posts
+columns: post_id, user_id(refrencing post liked)
+** so we need a one-to-many relation with user_id to post_id
+
+##composite keys
+. primary key that spans multiple columns
+. since primary keys must be unique , this will ensure no user can like a post twice.(making post_id_user_id as a sincle column and making primary key)
+
+so therefore we create both the columns as composite key so that both columns shouldn't be repeated simultaneously...
+ -->
+
+<!-- vote route...
+* /vote will the path to route
+* user id will be extracted from JWT token
+* body will contain the id of the post the user is voting on as well direction of the vote
+{
+    post_id: 1432
+    vote_dir: 0
+}
+* a vote direction of 1 means we want to add a vote, a direction of 0 means we want to delete a vote. 
+
+** now we want users to see how many likes does any post got...-->
+
+<!-- working with joins now!!!!!!!! -->
+<!-- suppose we want to get a post , but the user dosen't know who created the post just by the owner_id , we need to fetch the email from the users table , this creates a cumbersome creating multiple queries , so we use SQL joins for it.. -->
+
+<!-- now i used right join and counted the no of posts liked by any specific user once, used right join since left join didn't mention the users who didn't like any post, and used count method of sql to cound the no of likes/votes -->
+<!-- now joining posts and votes table -->
+
+<!-- -- *) select users.id, COUNT(*) from posts RIGHT JOIN users ON posts.owner_id = users.id group by users.id ;
+-- *) select * from posts RIGHT JOIN users ON posts.owner_id = users.id ;
+--*) select users.id, users.email, COUNT(posts.id) as user_post_count from posts RIGHT JOIN users ON posts.owner_id = users.id group by users.id order by count(posts.id);
+-- *) select posts.*, Count(votes.post_id) as votes from posts LEFT JOIN votes on posts.id = votes.post_id where post_id = 10 group by posts.id ;
+-- *) select * from votes; -->
+
+
+<!-- JOINS in SQLalchemy -->
+<!-- just for some reference -->
+<!-- -- select users.id, COUNT(*) from posts RIGHT JOIN users ON posts.owner_id = users.id group by users.id ;
+-- select * from posts RIGHT JOIN users ON posts.owner_id = users.id ;
+-- select users.id, users.email, COUNT(posts.id) as user_post_count from posts RIGHT JOIN users ON posts.owner_id = users.id group by users.id order by count(posts.id);
+-- select posts.*, Count(votes.post_id) as votes from posts LEFT JOIN votes on posts.id = votes.post_id  group by posts.id ;
+-- select * from votes;
+-- SELECT posts.id, posts.title, posts.content, posts.published, posts.created_at, posts.owner_id, COUNT(votes.post_id) AS Votes FROM posts LEFT JOIN votes ON votes.post_id = posts.id GROUP BY posts.id; -->
+
+
+<!-- i dont know what the hell is happening between pydantic v1 and v2 , there might be some issues or i maybe facing issues, but its showing Response ValidationError.. due to some reasons, maybe due to nested schemas used in PostOut or whatever, so i created a posts_out list taking posts and votes from results query obtained, then converting to the required dictionary shape with our own.... -->
+
+<!-- we talked about the limitation of sqlalchemy , that it checks if the table already exists , it dosen't let u alter the table , hence we are going to use migration tool -->
+<!-- this migration tool is called alembic tool :it allows to make change in the tables in postgres when the tables are altered in sqlalchemy in models.py -->
+
+<!-- database migrations :
+    1: developers can track changes to code and rollback code easily with GIT. 
+    2: database migrations allow us to incrementally track changes to database schema and rollback changes to any point in time 
+    3: we will use a tool called alembic to make changes to our database
+    4: alembic can also automatically pull database models from sqlalchemy and generate proper tables  -->
+
+<!-- we want alembic to work properly, so for this , it needs to get connected to models.py and Base of models.py ( which is offcourse imported from dataase only, but this makes alembic get access to all the models we  have) and other sqlalchemy 
+** we basically import the Base object of models.py to env.py of alembic folder-->
+
+<!-- alembic start....
+1:  revision-:  Create a new revision file. 
+2:  alembic revision -m "create post table"(this created a .py file in alembic versions folder..)
+3:   this file contains revision ID, and from alembic import op
+import sqlalchemy as sa also, 
+then it also has 2 functions, upgrade and downgrade
+4: if we want to make any changes in creating a post table or other it would be mentioned here, while for rolling back we use downgrade function...-->
+
+<!-- alembic creates two tables when one asked , one is posts that we asked for , but the other is alembic_version which it creates itself to keep track of the version number of the tables and keep them related.. -->
+<!-- now each time we want some upgradation or change in the table , we will create a new revision each time and that i stored in alembic revsion table.. -->
+
+<!-- now that we have learnt few of alembic to create , drop tables , add column and delete the column ,, alembic is smart enough to look to the models.py and find whether any table has to be created more or any columns is missing in thetable but mentioned in models, it creates or adds it automatically to the table and make necessary changes -->
+<!-- this following text in main.py is not needed (models.Base.metadata.create_all(bind = engine) as this statement told sqlalchemy to generate create statements so to generate all the tables , but now we have alembic with us ) -->
+
+<!-- CORS (policy)-->
+
+<!--** cross origin resource sharing allows you to make requests from a web browser on one domain to a server on a different domain.
+** by default our API will only allow web browser running on the same domain as our server to make requests to it..  -->
+
+<!-- the CORS policy in brave is quite stronger than in chrome browser, so there fore we are getting failed to fetch error in brave while executing this specific command fetch('http://localhost:8000/').then(res => res.json()).then(console.log) , while in chrome it succesfully prints the message... -->
+
+<!-- Now we will be working with GIT , so that we can track our changes and set up a remote repository to store all our codes -->
