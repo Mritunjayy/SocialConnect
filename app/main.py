@@ -12,7 +12,12 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # models.Base.metadata.create_all(bind = engine)
 
-app= FastAPI()
+app= FastAPI(
+    title="SocialConnect",
+    description="SocialConnect is a social media platform where users can post their thoughts and everything and people can vote it..",
+    version="v2",
+    docs_url="/docs"
+)
 
 # origins =["https://www.google.com", "https://www.youtube.com"] 
 origins = ['*']
