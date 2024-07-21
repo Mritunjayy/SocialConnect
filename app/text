@@ -113,3 +113,7 @@ then it also has 2 functions, upgrade and downgrade
 <!-- the CORS policy in brave is quite stronger than in chrome browser, so there fore we are getting failed to fetch error in brave while executing this specific command fetch('http://localhost:8000/').then(res => res.json()).then(console.log) , while in chrome it succesfully prints the message... -->
 
 <!-- Now we will be working with GIT , so that we can track our changes and set up a remote repository to store all our codes -->
+<!-- 
+dpg-cqektq0gph6c73art5dg-a
+dpg-cqektq0gph6c73art5dg-a.oregon-postgres.render.com
+postgresql://postgres_fastapi:fmbavs78D5C0xULZkPpz3ONhGuw4e9dY@dpg-cqektq0gph6c73art5dg-a.oregon-postgres.render.com/fastapi_60p6 -->
