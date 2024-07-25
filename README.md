@@ -1,4 +1,4 @@
-# Example FastAPI Application
+# Example FastAPI Application (SocialConnect)
 
 This project provides a simple FastAPI application that demonstrates basic API functionalities. It includes examples of request handling, database interactions, and more.
 
@@ -76,3 +76,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 - [SQLAlchemy](https://www.sqlalchemy.org/)
 - [Alembic](https://alembic.sqlalchemy.org/)
 - [Uvicorn](https://www.uvicorn.org/)
+
+## PS: 
+This is an example applicationb and still in testing phase, there might be some issues at certain places..
+working on it.
