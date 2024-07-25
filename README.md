@@ -52,6 +52,7 @@ This repository showcases a basic setup of a FastAPI application, focusing on cr
 
 ## Project Structure
 
+```bash
 example-fastapi/
 ├── app/
 │   ├── __init__.py
@@ -63,6 +64,7 @@ example-fastapi/
 ├── tests/
 ├── requirements.txt
 └── README.md
+```bash
 
 ## Contributing
 
