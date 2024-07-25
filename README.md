@@ -64,7 +64,7 @@ example-fastapi/
 ├── tests/
 ├── requirements.txt
 └── README.md
-```bash
+
 
 ## Contributing
 
