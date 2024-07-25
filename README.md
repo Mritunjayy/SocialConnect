@@ -72,7 +72,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Acknowledge
 
-. FastAPI
-. SQLAlchemy 
-. Alembic
-. Uvicorn
+- [FastAPI](https://fastapi.tiangolo.com/)
+- [SQLAlchemy](https://www.sqlalchemy.org/)
+- [Alembic](https://alembic.sqlalchemy.org/)
+- [Uvicorn](https://www.uvicorn.org/)
