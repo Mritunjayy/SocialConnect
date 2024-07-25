@@ -45,7 +45,8 @@ This repository showcases a basic setup of a FastAPI application, focusing on cr
 ## Usage
 
 1. Run the FastAPI application:
-   ```uvicorn app.main:app --reload
+   ```bash
+   uvicorn app.main:app --reload
 
 2. Open your web browser and go to http://127.0.0.1:8000/.
 
