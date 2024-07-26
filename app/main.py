@@ -9,6 +9,7 @@ from app.database import engine
 from .routers import post, user, auth, vote
 from .config import settings
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.responses import RedirectResponse
 
 # models.Base.metadata.create_all(bind = engine)
 
@@ -46,6 +47,12 @@ app.include_router(post.router)
 app.include_router(user.router)  
 app.include_router(auth.router)  
 app.include_router(vote.router)    
+
+
+
+@app.get("/", include_in_schema=False)
+def redirect_to_docs():
+    return RedirectResponse(url="/docs")
  
 # @app.get("/login")
 @app.get("/")
