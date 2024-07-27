@@ -1,9 +1,7 @@
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
-    # database_password: str = "localhost"
-    # database_username: str = "postgres"
-    # secret_key: str = "234ui2340892348"
+   
     database_hostname: str
     database_port: str
     database_password: str
@@ -13,11 +11,10 @@ class Settings(BaseSettings):
     algorithm: str
     access_token_expire_minutes: int
     database_url: str
-
     class Config:
         env_file = ".env"
 
         
 settings = Settings() 
 
-# print(settings.database_username)
+# print("dfgh",settings.database_username)

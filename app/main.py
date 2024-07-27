@@ -15,7 +15,9 @@ from starlette.responses import RedirectResponse
 
 app= FastAPI(
     title="SocialConnect",
-    description="SocialConnect is a social media platform where users can post their thoughts and everything and people can vote it..",
+    description = """
+    Connecting people, fostering communities.\n
+    SocialConnect is a social media platform where users can post their thoughts and everything and people can vote it..""",
     version="v2",
     docs_url="/docs"
 )
@@ -46,7 +48,7 @@ app.add_middleware(
 app.include_router(post.router)  
 app.include_router(user.router)  
 app.include_router(auth.router)  
-app.include_router(vote.router)    
+# app.include_router(vote.router)    
 
 
 
